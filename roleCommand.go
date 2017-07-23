@@ -32,6 +32,8 @@ func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role
 			assignRole(s, m, "Bronze")
 		case "gold":
 			assignRole(s, m, "Gold")
+		case "silver":
+			assignRole(s, m, "Silver")
 		case "platinum":
 		case "plat":
 			assignRole(s, m, "Platinum")
