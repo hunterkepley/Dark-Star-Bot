@@ -6,6 +6,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+//TODO: Make multiple roles in one message possible
+
 func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role to someone
 	if len(splitMsgLowered) > 1 { // If it just isnt `$role`
 
@@ -13,15 +15,13 @@ func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role
 		switch splitMsgLowered[1] { // The switch statements with things like `ad` and `adc` is to
 		case "top": //				   make it easier on people to add their roles.
 			assignRole(s, m, "Top")
-		case "adc":
-		case "ad":
+		case "adc", "ad":
 			assignRole(s, m, "ADC")
-		case "support":
+		case "supp", "support":
 			assignRole(s, m, "Support")
 		case "mid":
 			assignRole(s, m, "Mid")
-		case "jungle":
-		case "jg":
+		case "jungle", "jg":
 			assignRole(s, m, "Jungle")
 		case "fill":
 			assignRole(s, m, "Fill")
@@ -30,17 +30,15 @@ func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role
 			assignRole(s, m, "Unranked")
 		case "bronze":
 			assignRole(s, m, "Bronze")
-		case "gold":
-			assignRole(s, m, "Gold")
 		case "silver":
 			assignRole(s, m, "Silver")
-		case "platinum":
-		case "plat":
+		case "gold":
+			assignRole(s, m, "Gold")
+		case "platinum", "plat":
 			assignRole(s, m, "Platinum")
 		case "diamond":
 			assignRole(s, m, "Diamond")
-		case "master":
-		case "masters":
+		case "master", "masters":
 			assignRole(s, m, "Masters")
 		case "challenger":
 			assignRole(s, m, "Challenger")
@@ -85,15 +83,17 @@ func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded str
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, "Unable to add role! Message <@!121105861539135490> and tell him there's a problem.")
 		}
-
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
+		if err == nil {
+			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
+		}
 	} else {
 		err := s.GuildMemberRoleRemove(currentGuild.ID, m.Author.ID, tempRoleID) // GuildMemberRoleRemove(guildID, userID, roleID) .. returns an error
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, "Unable to remove role! Message <@!121105861539135490> and tell him there's a problem.")
 		}
-
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role removed!", roleNeeded))
+		if err == nil {
+			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role removed!", roleNeeded))
+		}
 	}
 
 }
