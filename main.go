@@ -21,6 +21,9 @@ var (
 	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub"
 
 	splitMsgLowered = []string{}
+
+	botOwnerID       = "121105861539135490" // Change to your id on discord
+	welcomeChannelID = "306163112032206868" // Change to a welcome channel to send the welcome message to in your guild
 )
 
 func makeSplitMessage(s *discordgo.Session, m *discordgo.MessageCreate) []string {
@@ -118,7 +121,7 @@ func getMember(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Memb
 	return member
 }
 
-func getState(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.State { // Returns state
+func getState(s *discordgo.Session) *discordgo.State { // Returns state
 	state := s.State
 
 	return state
@@ -152,4 +155,20 @@ func createChannel(s *discordgo.Session, m *discordgo.MessageCreate, ID string) 
 	}
 
 	return channel
+}
+
+func makeMentionRegular(userID string) string {
+	return "<@" + userID + ">"
+}
+
+func makeMentionNick(userID string) string {
+	return "<@!" + userID + ">"
+}
+
+func makeMention(userID string, s *discordgo.Session, m *discordgo.MessageCreate) string {
+	currentMember := getMember(s, m)
+	if currentMember.Nick == "" {
+		return makeMentionRegular(userID)
+	}
+	return makeMentionNick(userID)
 }

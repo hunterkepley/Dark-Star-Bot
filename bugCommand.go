@@ -10,7 +10,7 @@ import (
 func bugCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Reports a bug as a PM to me, replace the ID to your ID or even a channelID if you want
 	if len(splitMsgLowered) > 1 {
 		bugReport := strings.Join(splitMsgLowered[1:], " ")
-		channel := createChannel(s, m, "121105861539135490")
+		channel := createChannel(s, m, botOwnerID)
 
 		authorChannel, err := s.UserChannelCreate(m.Author.ID)
 		if err != nil {
