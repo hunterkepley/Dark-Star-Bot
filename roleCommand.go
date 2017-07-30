@@ -59,34 +59,32 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 	currentGuild := getGuild(s, m)
 	currentMember := getMember(s, m)
 
-	if currentGuild != nil {
-		if currentMember != nil {
+	if currentGuild != nil && currentMember != nil {
 
-			tempRoleID := "" // The temporary storage for role id.
+		tempRoleID := "" // The temporary storage for role id.
 
-			tempRoleID = findRoleID(roleNeeded, currentGuild)
+		tempRoleID = findRoleID(roleNeeded, currentGuild)
 
-			hasRole := memberHasRole(currentMember, tempRoleID)
+		hasRole := memberHasRole(currentMember, tempRoleID)
 
-			if !hasRole { // Give that guy a role
-				err := s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role
-				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Unable to add role! Message <@!121105861539135490> and tell him there's a problem.")
-				}
-				if err == nil { // Didnt want this popping up if there was an error
-					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
-				}
-			} else { // Bye bye role
-				err := s.GuildMemberRoleRemove(currentGuild.ID, m.Author.ID, tempRoleID) // Remove the role
-				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Unable to remove role! Message <@!121105861539135490> and tell him there's a problem.")
-				}
-				if err == nil { // Didnt want this popping up if there was an error
-					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role removed!", roleNeeded))
-				}
+		if !hasRole { // Give that guy a role
+			err := s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, "Unable to add role! Message <@!121105861539135490> and tell him there's a problem.")
 			}
-
+			if err == nil { // Didnt want this popping up if there was an error
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
+			}
+		} else { // Bye bye role
+			err := s.GuildMemberRoleRemove(currentGuild.ID, m.Author.ID, tempRoleID) // Remove the role
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, "Unable to remove role! Message <@!121105861539135490> and tell him there's a problem.")
+			}
+			if err == nil { // Didnt want this popping up if there was an error
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role removed!", roleNeeded))
+			}
 		}
+
 	}
 
 }
