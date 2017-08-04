@@ -23,7 +23,8 @@ var (
 	splitMsgLowered = []string{}
 
 	botOwnerID       = "121105861539135490" // Change to your id on discord
-	welcomeChannelID = "306163112032206868" // Change to a welcome channel to send the welcome message to in your guild
+	welcomeChannelID = "330195046177439745" // Change to a welcome channel to send the welcome message to in your guild
+	goodbyeChannelID = "330195046177439745" // Change to a goodbye channel to send the goodbye message to in your guild
 )
 
 func makeSplitMessage(s *discordgo.Session, m *discordgo.MessageCreate) []string {
@@ -51,6 +52,8 @@ func main() {
 	dg.AddHandler(messageCreate)
 	// Register the guildMemberAddHandler func as a callback for GuildMemberAdd events
 	dg.AddHandler(guildMemberAddHandler)
+	// Register the guildMemberRemoveHandler func as a callback for GuildMemberRemove events
+	dg.AddHandler(guildMemberRemoveHandler)
 
 	// Open a websocket connection to Discord and begin listening
 	err = dg.Open()
@@ -90,6 +93,14 @@ func guildMemberAddHandler(s *discordgo.Session, e *discordgo.GuildMemberAdd) { 
 	}
 
 	welcomeMessage(s, e)
+}
+
+func guildMemberRemoveHandler(s *discordgo.Session, e *discordgo.GuildMemberRemove) {
+	if e.User.Bot {
+		return
+	}
+
+	goodbyeMessage(s, e)
 }
 
 func getGuild(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Guild { // Returns guild
