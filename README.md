@@ -3,7 +3,14 @@ Role management and server management discord bot made for the Dark Star Communi
 
 Using the discordgo library [https://www.github.com/bwmarrin/discordgo]
 
-To run the bot for yourself;
+# To compile:
+
+1) Download the Go compiler from http://golang.org
+2) Go to the location of the source files
+3) Type `go build` [I'd advise against `go run` because you have to use a token to run the bot correctly.]
+4) Continue to running the bot.
+
+# To run the bot for yourself;
 
 1) Make a discord app
 2) Make the discord app a bot
