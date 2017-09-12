@@ -54,6 +54,8 @@ func main() {
 	dg.AddHandler(guildMemberAddHandler)
 	// Register the guildMemberRemoveHandler func as a callback for GuildMemberRemove events
 	dg.AddHandler(guildMemberRemoveHandler)
+	// Register the guildMemberBannedHandler func as a callback fro GuildBanAdd events
+	dg.AddHandler(guildMemberBannedHandler)
 
 	// Open a websocket connection to Discord and begin listening
 	err = dg.Open()
@@ -101,6 +103,14 @@ func guildMemberRemoveHandler(s *discordgo.Session, e *discordgo.GuildMemberRemo
 	}
 
 	goodbyeMessage(s, e)
+}
+
+func guildMemberBannedHandler(s *discordgo.Session, e *discordgo.GuildBanAdd) {
+	if e.User.Bot {
+		return
+	}
+
+	banMessage(s, e)
 }
 
 func getGuild(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Guild { // Returns guild
