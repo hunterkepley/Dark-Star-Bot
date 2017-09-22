@@ -55,5 +55,6 @@ role1,roleone=Role1;
 
 Example;
 
-Folder1/Application
-Folder1/roles/server1roles.dsr
+~/Documents/Folder1/Application
+
+~/Documents/Folder1/roles/server1roles.dsr
