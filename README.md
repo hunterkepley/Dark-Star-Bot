@@ -32,6 +32,7 @@ Using the discordgo library [https://www.github.com/bwmarrin/discordgo]
 ## It's structured like so:
 
 GuildID;
+
 call1,call2=Role;
 
 ## The calls MUST NOT have spaces, the Roles CAN have spaces
@@ -44,11 +45,13 @@ Example:
 ### IN DSR FILE:
 
 GuildID;
+
 role1,roleone=Role1;
 
 ### USER CAN TYPE THESE TO CALL THE ROLE:
 
 '$role role1'
+
 '$role roleone'
 
 ### Make SURE that the .dsr files are in a directory called 'roles' and that directory is in the same directory as the application.
