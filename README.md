@@ -23,9 +23,9 @@ Using the discordgo library [https://www.github.com/bwmarrin/discordgo]
 
 4) Use an OAuth2 Generator to get an invite link
 
-4.5) MAKE SURE that you have a 'roles/' directory with the application, and that you have a .dsr file! That is how the bot knows which roles you can call from the bot. See below to see how to make a .dsr file properly.
+5) MAKE SURE that you have a 'roles/' directory with the application, and that you have a .dsr file! That is how the bot knows which roles you can call from the bot. See below to see how to make a .dsr file properly.
 
-5) Invite to your server and wammo!
+6) Invite to your server and wammo!
 
 # How to make a .dsr file:
 
