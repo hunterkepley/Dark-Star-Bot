@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"path/filepath"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -18,38 +20,40 @@ func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role
 }
 
 func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, givenRole string) {
+	var roles []string
+	var calls [][]string
+	var serverID string
+	_ = serverID // Added because it thinks it isn't being used.
+	dsrFiles := getFilesFromDir("roles/*.dsr")
+	for i := 0; i < len(dsrFiles); i++ {
+		tcalls, troles, serverID := handledsr(dsrFiles[i])
+		channel, err := s.Channel(m.ChannelID)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			guildID := channel.GuildID
+			if serverID == guildID { // Is the current guild = to the current file being looped through?
+				roles = troles // Then copy the roles from said file!
+				calls = tcalls // And the calls!
+			}
+		}
+	}
+
+	roleUsed := false
+
 	// Handles the ingame roles
-	switch givenRole { // The switch statements with things like `ad` and `adc` is to
-	case "top": //				   make it easier on people to add their roles.
-		giveRole(s, m, "Top")
-	case "adc", "ad":
-		giveRole(s, m, "ADC")
-	case "supp", "support":
-		giveRole(s, m, "Support")
-	case "mid":
-		giveRole(s, m, "Mid")
-	case "jungle", "jg":
-		giveRole(s, m, "Jungle")
-	case "fill":
-		giveRole(s, m, "Fill")
-		// Handles the ingame ranks
-	case "unranked":
-		giveRole(s, m, "Unranked")
-	case "bronze":
-		giveRole(s, m, "Bronze")
-	case "silver":
-		giveRole(s, m, "Silver")
-	case "gold":
-		giveRole(s, m, "Gold")
-	case "platinum", "plat":
-		giveRole(s, m, "Platinum")
-	case "diamond":
-		giveRole(s, m, "Diamond")
-	case "master", "masters":
-		giveRole(s, m, "Masters")
-	case "challenger":
-		giveRole(s, m, "Challenger")
-	default:
+	for i := 0; i < len(calls); i++ {
+		for j := 0; j < len(calls[i]); j++ {
+			switch givenRole {
+
+			case calls[i][j]:
+				roleUsed = true
+				giveRole(s, m, roles[i])
+			}
+		}
+	}
+
+	if !roleUsed {
 		s.ChannelMessageSend(m.ChannelID, "You cannot add that role! Use `$Roles` to see all available roles")
 	}
 }
@@ -71,6 +75,7 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 			err := s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role
 			if err != nil {
 				s.ChannelMessageSend(m.ChannelID, "Unable to add role! Message <@!121105861539135490> and tell him there's a problem.")
+				log.Fatal(err)
 			}
 			if err == nil { // Didnt want this popping up if there was an error
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
@@ -79,6 +84,7 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 			err := s.GuildMemberRoleRemove(currentGuild.ID, m.Author.ID, tempRoleID) // Remove the role
 			if err != nil {
 				s.ChannelMessageSend(m.ChannelID, "Unable to remove role! Message <@!121105861539135490> and tell him there's a problem.")
+				log.Fatal(err)
 			}
 			if err == nil { // Didnt want this popping up if there was an error
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role removed!", roleNeeded))
@@ -87,4 +93,12 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 
 	}
 
+}
+
+func getFilesFromDir(s string) []string { // Gets all files from a directory
+	r, err := filepath.Glob(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return r
 }
