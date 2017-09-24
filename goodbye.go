@@ -2,12 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 func goodbyeMessage(s *discordgo.Session, e *discordgo.GuildMemberRemove) {
-	s.ChannelMessageSendEmbed(goodbyeChannelID, &discordgo.MessageEmbed{
+	config, err := getConfigForGuildId(e.GuildID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s.ChannelMessageSendEmbed(config.goodbyeChannelId, &discordgo.MessageEmbed{
 		Title:       "Later!",
-		Description: fmt.Sprintf("Goodbye, %s!", makeMentionRegular(e.User.ID))})
+		Description: fmt.Sprintf(config.goodbyeMessage, e.User.Username)})
 }

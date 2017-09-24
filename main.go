@@ -23,8 +23,6 @@ var (
 	splitMsgLowered = []string{}
 
 	botOwnerID       = "121105861539135490" // Change to your id on discord
-	welcomeChannelID = "330195046177439745" // Change to a welcome channel to send the welcome message to in your guild
-	goodbyeChannelID = "330195046177439745" // Change to a goodbye channel to send the goodbye message to in your guild
 )
 
 func makeSplitMessage(s *discordgo.Session, m *discordgo.MessageCreate) []string {

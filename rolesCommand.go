@@ -8,26 +8,22 @@ import (
 )
 
 func rolesCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
-	var roles []string
-	var serverID string
-	_ = serverID // Added because it thinks it isn't being used.
-	dsrFiles := getFilesFromDir("roles/*.dsr")
-	for i := 0; i < len(dsrFiles); i++ {
-		_, troles, serverID := handledsr(dsrFiles[i])
-		channel, err := s.Channel(m.ChannelID)
+	var config DSGConfig
+	channel, err := s.Channel(m.ChannelID)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		config, err := getConfigForGuildId(channel.GuildID)
+		_ = config
 		if err != nil {
 			log.Fatal(err)
-		} else {
-			guildID := channel.GuildID
-			if serverID == guildID {
-				roles = troles
-			}
 		}
 	}
+
 	ps := ""
-	if len(roles) > 0 {
-		for i := 0; i < len(roles); i++ {
-			ps += fmt.Sprintf("%s\n", roles[i])
+	if len(config.roles) > 0 {
+		for i := 0; i < len(config.roles); i++ {
+			ps += fmt.Sprintf("%s\n", config.roles[i])
 		}
 	} else {
 		ps = "No roles available!"
