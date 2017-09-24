@@ -18,7 +18,7 @@ var (
 
 // Custom variables
 var (
-	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nVote\nInsult"
+	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nVote"
 
 	splitMsgLowered = []string{}
 
@@ -54,7 +54,7 @@ func main() {
 	dg.AddHandler(guildMemberAddHandler)
 	// Register the guildMemberRemoveHandler func as a callback for GuildMemberRemove events
 	dg.AddHandler(guildMemberRemoveHandler)
-	// Register the guildMemberBannedHandler func as a callback fro GuildBanAdd events
+	// Register the guildMemberBannedHandler func as a callback for GuildBanAdd events
 	dg.AddHandler(guildMemberBannedHandler)
 
 	// Open a websocket connection to Discord and begin listening
