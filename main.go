@@ -22,7 +22,7 @@ var (
 
 	splitMsgLowered = []string{}
 
-	botOwnerID       = "121105861539135490" // Change to your id on discord
+	botOwnerID = "121105861539135490" // Change to your id on discord
 )
 
 func makeSplitMessage(s *discordgo.Session, m *discordgo.MessageCreate) []string {
@@ -174,20 +174,4 @@ func createChannel(s *discordgo.Session, m *discordgo.MessageCreate, ID string) 
 	}
 
 	return channel
-}
-
-func makeMentionRegular(userID string) string {
-	return "<@" + userID + ">"
-}
-
-func makeMentionNick(userID string) string {
-	return "<@!" + userID + ">"
-}
-
-func makeMention(userID string, s *discordgo.Session, m *discordgo.MessageCreate) string {
-	currentMember := getMember(s, m)
-	if currentMember.Nick == "" {
-		return makeMentionRegular(userID)
-	}
-	return makeMentionNick(userID)
 }

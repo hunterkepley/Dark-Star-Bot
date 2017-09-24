@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
-	
+
 	"github.com/bwmarrin/discordgo"
 )
 
 func welcomeMessage(s *discordgo.Session, e *discordgo.GuildMemberAdd) {
-	config, err := getConfigForGuildId(e.GuildID)
+	config, err := getConfigForGuildID(e.GuildID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s.ChannelMessageSendEmbed(config.welcomeChannelId, &discordgo.MessageEmbed{
+	s.ChannelMessageSendEmbed(config.welcomeChannelID, &discordgo.MessageEmbed{
 		Title:       "Welcome!",
-		Description: fmt.Sprintf(config.welcomeMessage, makeMentionRegular(e.User.ID))})
+		Description: fmt.Sprintf(config.welcomeMessage, e.User.Mention())})
 }

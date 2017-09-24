@@ -1,28 +1,37 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 	"strings"
 	"unicode"
-	"errors"
 )
 
-type DSGConfig struct {
-	serverId string
-	calls [][]string
-	roles []string
-	welcomeChannelId string
-	welcomeMessage string
-	goodbyeChannelId string
-	goodbyeMessage string
-	banChannelId string
-	banMessage string
+type dsgConfig struct {
+	serverID         string
+	calls            [][]string
+	roles            []string
+	welcomeChannelID string
+	welcomeMessage   string
+	goodbyeChannelID string
+	goodbyeMessage   string
+	banChannelID     string
+	banMessage       string
 }
 
 /*
- * WHEN MAKING THE .DSR FILES, YOU MUST FOLLOW THIS FORMAT:
+ * WHEN MAKING THE .DSR FILES, YOU MUST FOLLOW THIS FORMAT: [PLEASE READ]
  * LINE 1: Always the server ID with a ; on the end
+ * LINE 2: Always the welcome Channel ID with a ; on the end
+ * LINE 3: Always the welcome Channel Message with a ; on the end,
+ *      Add a %s where the username should go! [Ex: Welcome, %s!]
+ * LINE 4: Always the goodbye Channel ID with a ; on the end
+ * LINE 5: Always the goodbye Channel Message with a ; on the end
+ *      Add a %s where the username should go! [Ex: Welcome, %s!]
+ * LINE 6: Always the ban     Channel ID with a ; on the end
+ * LINE 7: Always the ban     Channel Message with a ; on the end
+ *      Add a %s where the username should go! [Ex: Welcome, %s!]
  *
  * LINES PROCEEDING must be done like so:
  * CALL,CALL,CALL=ROLE;
@@ -34,42 +43,53 @@ type DSGConfig struct {
  * role,arole=A Role;
  */
 
-func getConfigForGuildId(guildId string) (DSGConfig, error) {
+/*
+ * WHEN MAKING A SERVERCONFIG.DSR FILE: [PLEASE READ]
+ * It must be set up as the following for each line and each .dsr file corresponding to a server:
+ * guildID=fileName.dsr;
+ *
+ * Example:
+ * 123456789101112131=myServer.dsr
+ */
+
+func getConfigForGuildID(guildID string) (dsgConfig, error) {
 	file, err := os.Open("roles/serverconfig.dsr")
 	if err != nil {
 		log.Fatal(err)
-		return DSGConfig{}, err
+		return dsgConfig{}, err
 	}
 
 	data := make([]byte, 5000)
 	count, err := file.Read(data)
 	if err != nil {
 		log.Fatal(err)
-		return DSGConfig{}, err
+		return dsgConfig{}, err
 	}
 
 	s := string(data[:count])
+	s = SpaceMap(s)
 	fLines := strings.Split(s, ";")
 
 	var fileName string
 
 	for i := 0; i < len(fLines); i++ {
 		t := strings.Split(fLines[i], "=")
-		if(t[0] == guildId) {
-			fileName = t[1]
-			break
+		if len(t) >= 2 {
+			if t[0] == guildID {
+				fileName = t[1]
+			}
 		}
 	}
 
-	if s == "" {
-		return DSGConfig{}, errors.New("Could not find config file for that guildId")
-		
+	if fileName == "" {
+		return dsgConfig{}, errors.New("Could not find config file for that guildID")
+
 	}
 
 	return handledsr(fileName), nil
- }
+}
 
-func handledsr(filename string) DSGConfig { // Opens a dsr file and returns the role calls,
+func handledsr(filename string) dsgConfig { // Opens a dsr file and returns the role calls,
 	//													and then the actual role
 	file, err := os.Open(filename) // For read access.
 	if err != nil {
@@ -86,11 +106,11 @@ func handledsr(filename string) DSGConfig { // Opens a dsr file and returns the 
 	fLines := strings.Split(s, ";") // Separates lines
 	// Removed the first line, which is the server ID
 	sID := fLines[0]
-	welcomeChannelId := fLines[1]
+	welcomeChannelID := fLines[1]
 	welcomeMessage := fLines[2]
-	goodbyeChannelId := fLines[3]
+	goodbyeChannelID := fLines[3]
 	goodbyeMessage := fLines[4]
-	banChannelId := fLines[5]
+	banChannelID := fLines[5]
 	banMessage := fLines[6]
 	fLines = fLines[7:]
 	var fCalls []string
@@ -114,7 +134,7 @@ func handledsr(filename string) DSGConfig { // Opens a dsr file and returns the 
 		fCallsFinal = append(fCallsFinal, t)
 	}
 
-	return DSGConfig{sID, fCallsFinal, fRolesFinal, welcomeChannelId, welcomeMessage, goodbyeChannelId, goodbyeMessage, banChannelId, banMessage}
+	return dsgConfig{sID, fCallsFinal, fRolesFinal, welcomeChannelID, welcomeMessage, goodbyeChannelID, goodbyeMessage, banChannelID, banMessage}
 }
 
 //SpaceMap ... removes all whitespace from a string efficiently

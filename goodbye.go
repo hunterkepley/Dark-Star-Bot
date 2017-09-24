@@ -8,12 +8,12 @@ import (
 )
 
 func goodbyeMessage(s *discordgo.Session, e *discordgo.GuildMemberRemove) {
-	config, err := getConfigForGuildId(e.GuildID)
+	config, err := getConfigForGuildID(e.GuildID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s.ChannelMessageSendEmbed(config.goodbyeChannelId, &discordgo.MessageEmbed{
+	s.ChannelMessageSendEmbed(config.goodbyeChannelID, &discordgo.MessageEmbed{
 		Title:       "Later!",
 		Description: fmt.Sprintf(config.goodbyeMessage, e.User.Username)})
 }

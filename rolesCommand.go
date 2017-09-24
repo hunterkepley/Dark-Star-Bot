@@ -8,16 +8,15 @@ import (
 )
 
 func rolesCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
-	var config DSGConfig
+	var config dsgConfig
 	channel, err := s.Channel(m.ChannelID)
 	if err != nil {
 		log.Fatal(err)
-	} else {
-		config, err := getConfigForGuildId(channel.GuildID)
-		_ = config
-		if err != nil {
-			log.Fatal(err)
-		}
+	}
+	config, err = getConfigForGuildID(channel.GuildID)
+	_ = config
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	ps := ""

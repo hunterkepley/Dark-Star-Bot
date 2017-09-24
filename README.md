@@ -29,35 +29,66 @@ Using the discordgo library [https://www.github.com/bwmarrin/discordgo]
 
 # How to make a .dsr file:
 
-## It's structured like so:
+## You need a serverconfig.dsr file! Please add that first.
+It's structured like so: [No spaces!]
 
-GuildID;
+GuildID=roles/FileName.dsr;
+GuildID2=roles/FileName2.dsr;
 
-call1,call2=Role;
+* Example:
 
-## The calls MUST NOT have spaces, the Roles CAN have spaces
+123123123123=roles/myServer.dsr;
+123131231231=roles/myFriendsServer.dsr;
+
+## .DSR server file:
+
+* It's structured like so:
+
+WHEN MAKING THE .DSR FILES, YOU MUST FOLLOW THIS FORMAT: [PLEASE READ]
+LINE 1: Always the server ID with a ; on the end
+LINE 2: Always the welcome Channel ID with a ; on the end
+LINE 3: Always the welcome Channel Message with a ; on the end,
+     Add a %s where the username should go! [Ex: Welcome, %s!]
+LINE 4: Always the goodbye Channel ID with a ; on the end
+LINE 5: Always the goodbye Channel Message with a ; on the end
+     Add a %s where the username should go! [Ex: Welcome, %s!]
+LINE 6: Always the ban     Channel ID with a ; on the end
+LINE 7: Always the ban     Channel Message with a ; on the end
+     Add a %s where the username should go! [Ex: Welcome, %s!]
+LINES PROCEEDING: Calls=Role;
+     Example: call1,call2=Role;
+
+* The calls MUST NOT have spaces, the Roles CAN have spaces
 
 exampleone=Example One;
 
 ## A call is what the user will type to request a role,
 
-Example:
-### IN DSR FILE:
+* Example:
+#### IN DSR FILE:
 
 GuildID;
-
+welcomeChannelID;
+Hello, welcome to the server, %s!;
+goodbyeChannelID;
+Goodbye, %s!;
+banChannelID;
+Get out, %s!;
 role1,roleone=Role1;
+role2,roletwo=Role2;
 
-### USER CAN TYPE THESE TO CALL THE ROLE:
+#### USER CAN TYPE THESE TO CALL THE ROLE:
 
 '$role role1'
 
 '$role roleone'
 
-### Make SURE that the .dsr files are in a directory called 'roles' and that directory is in the same directory as the application.
+#### Make SURE that the .dsr files are in a directory called 'roles' and that directory is in the same directory as the application.
 
-Example:
+* Example:
 
 ~/Documents/Folder1/Application
+
+~/Documents/Folder1/roles/serverconfig.dsr
 
 ~/Documents/Folder1/roles/server1roles.dsr
