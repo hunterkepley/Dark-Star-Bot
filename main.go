@@ -65,7 +65,6 @@ func main() {
 	}
 
 	loadCommands()
-	loadInsults()
 
 	// Wait here until CTRL-C or other term signal is received
 	fmt.Println("The bot is now running. Press CTRL-C to stop")

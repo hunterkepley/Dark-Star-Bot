@@ -56,7 +56,7 @@ role1,roleone=Role1;
 
 ### Make SURE that the .dsr files are in a directory called 'roles' and that directory is in the same directory as the application.
 
-Example;
+Example:
 
 ~/Documents/Folder1/Application
 
