@@ -2,12 +2,18 @@ package main
 
 import (
 	"fmt"
-
+	"log"
+	
 	"github.com/bwmarrin/discordgo"
 )
 
 func banMessage(s *discordgo.Session, e *discordgo.GuildBanAdd) {
-	s.ChannelMessageSendEmbed(welcomeChannelID, &discordgo.MessageEmbed{
-		Title:       "BANNED",
-		Description: fmt.Sprintf("Girl, bye %s!", makeMentionRegular(e.User.ID))})
+	config, err := getConfigForGuildId(e.GuildID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s.ChannelMessageSendEmbed(config.banChannelId, &discordgo.MessageEmbed{
+		Title:       "Banned!",
+		Description: fmt.Sprintf(config.banMessage, e.User.Username)})
 }

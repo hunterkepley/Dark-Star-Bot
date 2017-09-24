@@ -20,35 +20,28 @@ func roleCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Add role
 }
 
 func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, givenRole string) {
-	var roles []string
-	var calls [][]string
-	var serverID string
-	_ = serverID // Added because it thinks it isn't being used.
-	dsrFiles := getFilesFromDir("roles/*.dsr")
-	for i := 0; i < len(dsrFiles); i++ {
-		tcalls, troles, serverID := handledsr(dsrFiles[i])
-		channel, err := s.Channel(m.ChannelID)
+	var config DSGConfig
+	channel, err := s.Channel(m.ChannelID)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		config, err := getConfigForGuildId(channel.GuildID)
+		_ = config
 		if err != nil {
 			log.Fatal(err)
-		} else {
-			guildID := channel.GuildID
-			if serverID == guildID { // Is the current guild = to the current file being looped through?
-				roles = troles // Then copy the roles from said file!
-				calls = tcalls // And the calls!
-			}
 		}
 	}
 
 	roleUsed := false
 
 	// Handles the ingame roles
-	for i := 0; i < len(calls); i++ {
-		for j := 0; j < len(calls[i]); j++ {
+	for i := 0; i < len(config.calls); i++ {
+		for j := 0; j < len(config.calls[i]); j++ {
 			switch givenRole {
 
-			case calls[i][j]:
+			case config.calls[i][j]:
 				roleUsed = true
-				giveRole(s, m, roles[i])
+				giveRole(s, m, config.roles[i])
 			}
 		}
 	}

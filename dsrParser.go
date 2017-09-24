@@ -5,7 +5,20 @@ import (
 	"os"
 	"strings"
 	"unicode"
+	"errors"
 )
+
+type DSGConfig struct {
+	serverId string
+	calls [][]string
+	roles []string
+	welcomeChannelId string
+	welcomeMessage string
+	goodbyeChannelId string
+	goodbyeMessage string
+	banChannelId string
+	banMessage string
+}
 
 /*
  * WHEN MAKING THE .DSR FILES, YOU MUST FOLLOW THIS FORMAT:
@@ -21,7 +34,42 @@ import (
  * role,arole=A Role;
  */
 
-func handledsr(filename string) ([][]string, []string, string) { // Opens a dsr file and returns the role calls,
+func getConfigForGuildId(guildId string) (DSGConfig, error) {
+	file, err := os.Open("roles/serverconfig.dsr")
+	if err != nil {
+		log.Fatal(err)
+		return DSGConfig{}, err
+	}
+
+	data := make([]byte, 5000)
+	count, err := file.Read(data)
+	if err != nil {
+		log.Fatal(err)
+		return DSGConfig{}, err
+	}
+
+	s := string(data[:count])
+	fLines := strings.Split(s, ";")
+
+	var fileName string
+
+	for i := 0; i < len(fLines); i++ {
+		t := strings.Split(fLines[i], "=")
+		if(t[0] == guildId) {
+			fileName = t[1]
+			break
+		}
+	}
+
+	if s == "" {
+		return DSGConfig{}, errors.New("Could not find config file for that guildId")
+		
+	}
+
+	return handledsr(fileName), nil
+ }
+
+func handledsr(filename string) DSGConfig { // Opens a dsr file and returns the role calls,
 	//													and then the actual role
 	file, err := os.Open(filename) // For read access.
 	if err != nil {
@@ -38,7 +86,13 @@ func handledsr(filename string) ([][]string, []string, string) { // Opens a dsr 
 	fLines := strings.Split(s, ";") // Separates lines
 	// Removed the first line, which is the server ID
 	sID := fLines[0]
-	fLines = fLines[1:]
+	welcomeChannelId := fLines[1]
+	welcomeMessage := fLines[2]
+	goodbyeChannelId := fLines[3]
+	goodbyeMessage := fLines[4]
+	banChannelId := fLines[5]
+	banMessage := fLines[6]
+	fLines = fLines[7:]
 	var fCalls []string
 	var fRoles []string
 	for i := 0; i < len(fLines); i++ {
@@ -60,7 +114,7 @@ func handledsr(filename string) ([][]string, []string, string) { // Opens a dsr 
 		fCallsFinal = append(fCallsFinal, t)
 	}
 
-	return fCallsFinal, fRolesFinal, sID
+	return DSGConfig{sID, fCallsFinal, fRolesFinal, welcomeChannelId, welcomeMessage, goodbyeChannelId, goodbyeMessage, banChannelId, banMessage}
 }
 
 //SpaceMap ... removes all whitespace from a string efficiently
