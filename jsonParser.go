@@ -28,7 +28,7 @@ type dsgServer struct {
 }
 
 type dsgConfig struct {
-	Files []dsgFile `json:"file"`
+	Files []dsgFile `json:"files"`
 }
 
 type dsgFile struct {
