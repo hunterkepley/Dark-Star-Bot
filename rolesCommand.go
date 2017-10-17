@@ -13,18 +13,25 @@ func rolesCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		fmt.Print("Error getting current channel: ", err)
 	}
+	if channel.GuildID != "" {
+		tserver := loadServer(cfg, channel.GuildID)
 
-	tserver := loadServer(cfg, channel.GuildID)
-
-	var ps string
-	if len(tserver.Roles) > 0 {
-		for i := 0; i < len(tserver.Roles); i++ {
-			ps += fmt.Sprintf("%s\n", tserver.Roles[i].Role)
+		var ps string
+		if len(tserver.Roles) > 0 {
+			for i := 0; i < len(tserver.Roles); i++ {
+				if tserver.Roles[i].GroupID == "Lane" || tserver.Roles[i].GroupID == "Filler" ||
+					tserver.Roles[i].GroupID == "Rank" || tserver.Roles[i].GroupID == "Skill" ||
+					tserver.Roles[i].GroupID == "Style" {
+					ps += fmt.Sprintf("%s\n", tserver.Roles[i].Role)
+				}
+			}
+		} else {
+			ps = "No roles available!"
 		}
+		s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{ // Straight up prints all the roles you can have.. Nothing else to it
+			Title:       "Roles Available:",
+			Description: ps})
 	} else {
-		ps = "No roles available!"
+		s.ChannelMessageSend(m.ChannelID, "No roles available.")
 	}
-	s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{ // Straight up prints all the roles you can have.. Nothing else to it
-		Title:       "Roles Available:",
-		Description: ps})
 }

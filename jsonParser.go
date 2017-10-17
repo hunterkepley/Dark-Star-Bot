@@ -9,8 +9,10 @@ import (
 )
 
 type dsgRole struct { // To hold calls and the role those calls affect
-	Calls []string `json:"calls"`
-	Role  string   `json:"role"`
+	Calls   []string `json:"calls"`
+	Role    string   `json:"role"`
+	Locked  bool     `json:"locked"`
+	GroupID string   `json:"groupID"`
 }
 
 type dsgMessage struct { // To hold a message and a channel to send when using dsgMessage.sendMessage()
@@ -36,7 +38,7 @@ type dsgFile struct {
 	Location string `json:"location"`
 }
 
-func loadConfig(l string) dsgConfig {
+func loadConfig(l string) dsgConfig { // Gets the config file and unmarshals it into a dsgConfig struct
 	var cfg dsgConfig
 	raw, err := ioutil.ReadFile(l)
 	if err != nil {
@@ -48,7 +50,7 @@ func loadConfig(l string) dsgConfig {
 	return cfg
 }
 
-func loadServers(c dsgConfig) []dsgServer {
+func loadServers(c dsgConfig) []dsgServer { // Gets all servers added to a certain config file
 	servers := make([]dsgServer, len(c.Files))
 	for i := 0; i < len(c.Files); i++ {
 		var s dsgServer
@@ -65,7 +67,7 @@ func loadServers(c dsgConfig) []dsgServer {
 	return servers
 }
 
-func loadServer(c dsgConfig, ID string) dsgServer {
+func loadServer(c dsgConfig, ID string) dsgServer { // Gets a specific server based off of guild ID
 	i := 0
 	for i = 0; i < len(c.Files); i++ {
 		if c.Files[i].ID == ID {
