@@ -18,7 +18,7 @@ var (
 
 // Custom variables
 var (
-	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub"
+	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nEvent\nSignup\nEndEvent"
 
 	splitMsgLowered = []string{}
 
@@ -82,9 +82,28 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) { // Messag
 
 	splitMsgLowered = makeSplitMessage(s, m)
 
+	checkHereEveryone(s, m)
+
 	if len(splitMsgLowered) > 0 { // Prevented a really rare and weird bug about going out of index.
 		parseCommand(s, m, splitMsgLowered[0]) // Really shouldnt happen since `MessageCreate` is about
 	} // 										messages made on create...
+}
+
+func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Doesn't let members who aren't mods, admins, or owners @here or @everyone. Please change to your needs.
+	if strings.Contains(m.Content, "@here") || strings.Contains(m.Content, "@everyone") { // [Yes, discord has functionality for this but I was instructed to add this for whatever stupid reason]
+		currentGuild := getGuild(s, m)
+		currentMember := getMember(s, m)
+		tempRoleIDM := findRoleID("Dark Mod", currentGuild)
+		tempRoleIDA := findRoleID("Dark Admins", currentGuild)
+		tempRoleIDD := findRoleID("Dark Overlord", currentGuild)
+		hasRoleM := memberHasRole(currentMember, tempRoleIDM)
+		hasRoleA := memberHasRole(currentMember, tempRoleIDA)
+		hasRoleD := memberHasRole(currentMember, tempRoleIDD)
+		if !hasRoleM && !hasRoleA && !hasRoleD {
+			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s>, please don't use `@here` or `@everyone`, if the message is important, talk to an admin or mod", m.Author.ID))
+			s.ChannelMessageDelete(m.ChannelID, m.ID)
+		}
+	}
 }
 
 func guildMemberAddHandler(s *discordgo.Session, e *discordgo.GuildMemberAdd) { // Handles GuildMemberAdd'ing

@@ -12,8 +12,8 @@ func helpCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Help com
 		s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 			Title:       "Commands:",
 			Description: fmt.Sprintf("%s", helpMsg)})
-	} else { // Otherwise, do this (like `[Help roleAddCommand`)
-		if splitMsgLowered[1] == strings.ToLower(commMap[splitMsgLowered[1]].name) { // If the second word (looking for the command, like `$Help role`)
+	} else { // Otherwise, do this (like `+Help roleAddCommand`)
+		if splitMsgLowered[1] == strings.ToLower(commMap[splitMsgLowered[1]].name) { // If the second word (looking for the command, like `+Help role`)
 			s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 				Title:       fmt.Sprintf("%s Help:", splitMsgLowered[1]),
 				Description: commMap[splitMsgLowered[1]].description})
