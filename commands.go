@@ -14,6 +14,7 @@ var (
 	roles  = Command{"roles", "Displays list of all roles available to add to yourself.", rolesCommand}
 	bug    = Command{"bug", "Sends a bug report to the creator of Dark Star Bot.", bugCommand}
 	github = Command{"github", "Displays a link to the github of the bot", githubCommand}
+	mute = Command{"mute", "Mutes a member for X hours", muteCommand}
 )
 
 // Command : Every command is made into a struct to make it simpler to work with and eliminate if statements
@@ -29,6 +30,7 @@ func loadCommands() {
 	commMap[roles.name] = roles
 	commMap[bug.name] = bug
 	commMap[github.name] = github
+	commMap[mute.name] = mute
 }
 
 func parseCommand(s *discordgo.Session, m *discordgo.MessageCreate, command string) {

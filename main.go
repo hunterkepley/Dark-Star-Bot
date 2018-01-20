@@ -18,7 +18,7 @@ var (
 
 // Custom variables
 var (
-	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\n"
+	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nMute"
 
 	splitMsgLowered = []string{}
 
@@ -87,6 +87,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) { // Messag
 	if len(splitMsgLowered) > 0 { // Prevented a really rare and weird bug about going out of index.
 		parseCommand(s, m, splitMsgLowered[0]) // Really shouldnt happen since `MessageCreate` is about
 	} // 										messages made on create...
+
+	if len(mutedUsers) > 0 {
+		checkMutes(s, m)
+	}
 }
 
 func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Doesn't let members who aren't mods, admins, or owners @here or @everyone. Please change to your needs.
