@@ -14,7 +14,7 @@ var (
 	roles  = Command{"roles", "Displays list of all roles available to add to yourself.", rolesCommand}
 	bug    = Command{"bug", "Sends a bug report to the creator of Dark Star Bot.", bugCommand}
 	github = Command{"github", "Displays a link to the github of the bot", githubCommand}
-	mute = Command{"mute", "Mutes a member for X hours", muteCommand}
+	mute   = Command{"mute", "Mutes a member for X hours", muteCommand}
 )
 
 // Command : Every command is made into a struct to make it simpler to work with and eliminate if statements
@@ -34,10 +34,12 @@ func loadCommands() {
 }
 
 func parseCommand(s *discordgo.Session, m *discordgo.MessageCreate, command string) {
-	if strings.Contains(string(command[0]), "$") { // If the first word of the message starts with `$`
-		command = string(command[1:]) // Remove the `$` from the command
-		if command == strings.ToLower(commMap[command].name) {
-			commMap[command].exec(s, m)
+	if len(command) > 1 {
+		if strings.Contains(string(command[0]), "$") { // If the first word of the message starts with `$`
+			command = string(command[1:]) // Remove the `$` from the command
+			if command == strings.ToLower(commMap[command].name) {
+				commMap[command].exec(s, m)
+			}
 		}
 	}
 	return

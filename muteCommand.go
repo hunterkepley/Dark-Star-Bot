@@ -1,23 +1,34 @@
 package main
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"time"
-	"strconv"
-	"log"
 	"fmt"
+	"log"
+	"strconv"
+	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 var (
-	mutedUsers []string // UserIDs
-	mutedTimes []int //Minutes
+	mutedUsers      []string // UserIDs
+	mutedTimes      []int    //Minutes
 	mutedStartTimes []time.Time
 )
 
 func muteCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
-	currentMember := getMember(s, m)
-	currentGuild := getGuild(s, m)
-	tempRoleIDM := findRoleID("Dark Mod", currentGuild)
+	currentMember, err := getMember(s, m)
+	if err != nil {
+		fmt.Println("Unabled to grab member, ")
+		fmt.Println(err)
+		return
+	}
+	currentGuild, err := getGuild(s, m)
+	if err != nil {
+		fmt.Println("Unabled to grab guild, ")
+		fmt.Println(err)
+		return
+	}
+	tempRoleIDM := findRoleID("Dark Mod", currentGuild) // Change these 3 to roles you want to be allowed to say @here/@everyone!
 	tempRoleIDA := findRoleID("Dark Admins", currentGuild)
 	tempRoleIDD := findRoleID("Dark Overlord", currentGuild)
 	hasRoleM := memberHasRole(currentMember, tempRoleIDM)
@@ -57,9 +68,14 @@ func checkMutes(s *discordgo.Session, m *discordgo.MessageCreate) {
 		t := time.Now()
 		elapsed := t.Sub(mutedStartTimes[i])
 		if int(elapsed.Minutes()) >= mutedTimes[i] {
-			currentGuild := getGuild(s, m)
+			currentGuild, err := getGuild(s, m)
+			if err != nil {
+				fmt.Println("Unabled to grab guild, ")
+				fmt.Println(err)
+				return
+			}
 			tempRoleID := findRoleID("Muted", currentGuild)
-			err := s.GuildMemberRoleRemove(currentGuild.ID, mutedUsers[i], tempRoleID) // Remove the role
+			err = s.GuildMemberRoleRemove(currentGuild.ID, mutedUsers[i], tempRoleID) // Remove the role
 			if err != nil {
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unable to remove mute from <@%s>! Most likely the user has left or they don't have the role anymore!", mutedUsers[i]))
 				log.Fatal(err)

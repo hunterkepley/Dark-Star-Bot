@@ -53,8 +53,18 @@ func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, givenRole stri
 
 func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded string, locked bool, groupID string) { // Assigns the role based off of a role needed
 
-	currentGuild := getGuild(s, m)
-	currentMember := getMember(s, m)
+	currentGuild, err := getGuild(s, m)
+	if err != nil {
+		fmt.Println("Unabled to grab guild, ")
+		fmt.Println(err)
+		return
+	}
+	currentMember, err := getMember(s, m)
+	if err != nil {
+		fmt.Println("Unabled to grab member, ")
+		fmt.Println(err)
+		return
+	}
 
 	if currentGuild != nil && currentMember != nil && groupID != "Vote" { // groupID != "Vote" is temporary
 

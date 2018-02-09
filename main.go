@@ -5,7 +5,7 @@ import (
 
 	"flag"
 	"fmt"
-	"os" 
+	"os"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -95,9 +95,19 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) { // Messag
 
 func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Doesn't let members who aren't mods, admins, or owners @here or @everyone. Please change to your needs.
 	if strings.Contains(m.Content, "@here") || strings.Contains(m.Content, "@everyone") { // [Yes, discord has functionality for this but I was instructed to add this for whatever stupid reason]
-		currentGuild := getGuild(s, m)
-		currentMember := getMember(s, m)
-		tempRoleIDM := findRoleID("Dark Mod", currentGuild)
+		currentGuild, err := getGuild(s, m)
+		if err != nil {
+			fmt.Println("Unabled to grab guild, ")
+			fmt.Println(err)
+			return
+		}
+		currentMember, err := getMember(s, m)
+		if err != nil {
+			fmt.Println("Unabled to grab member, ")
+			fmt.Println(err)
+			return
+		}
+		tempRoleIDM := findRoleID("Dark Mod", currentGuild) // Change these 3 to roles you want to be allowed to say @here/@everyone!
 		tempRoleIDA := findRoleID("Dark Admins", currentGuild)
 		tempRoleIDD := findRoleID("Dark Overlord", currentGuild)
 		hasRoleM := memberHasRole(currentMember, tempRoleIDM)
@@ -134,33 +144,24 @@ func guildMemberBannedHandler(s *discordgo.Session, e *discordgo.GuildBanAdd) {
 	banMessage(s, e)
 }
 
-func getGuild(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Guild { // Returns guild
-	currentChannel := getChannel(s, m)
+func getGuild(s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.Guild, error) { // Returns guild
+	currentChannel, err := getChannel(s, m)
 	currentGuild, err := s.Guild(currentChannel.GuildID) // Create the current guild object
-	if err != nil {
-		fmt.Println("Error getting guild", err)
-	}
 
-	return currentGuild
+	return currentGuild, err
 }
 
-func getChannel(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Channel { // Returns channel
+func getChannel(s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.Channel, error) { // Returns channel
 	currentChannel, err := s.Channel(m.ChannelID) // Create the current channel object
-	if err != nil {
-		fmt.Println("Error getting channel", err)
-	}
 
-	return currentChannel
+	return currentChannel, err
 }
 
-func getMember(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Member { // Returns member
-	currentGuild := getGuild(s, m)
+func getMember(s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.Member, error) { // Returns member
+	currentGuild, err := getGuild(s, m)
 	member, err := s.State.Member(currentGuild.ID, m.Author.ID)
-	if err != nil {
-		fmt.Println("Error making state", err)
-	}
 
-	return member
+	return member, err
 }
 
 func getState(s *discordgo.Session) *discordgo.State { // Returns state
