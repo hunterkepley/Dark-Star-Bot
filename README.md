@@ -33,6 +33,13 @@ Use `go get github.com/bwmarrin/discordgo` to get it!
 
 * **Hunter Kepley** - *Created bot* - [Github](https://www.github.com/hunterkepley) [Website](hunterkepley.github.io)
 
+# YOU NEED JSON FILES AND A MUTED ROLE FOR CERTAIN FUNCTIONALITY!
+
+## How the $mute command works
+You need to add a role called Muted
+
+Also, make sure the rooms you want the people to be muted in are set in the permissions properly!
+
 ## How the .json files are located and done
 The JSON files are of one config.json file, and of as many other JSON files you need, one for each server.
 
