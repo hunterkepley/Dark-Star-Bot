@@ -31,7 +31,7 @@ Use `go get github.com/bwmarrin/discordgo` to get it!
 
 ## Authors
 
-* **Hunter Kepley** - *Created bot* - [Github](https://www.github.com/hunterkepley) [Website](hunterkepley.github.io)
+* **Hunter Kepley** - *Created bot* - [Github](https://www.github.com/hunterkepley)
 
 # YOU NEED JSON FILES AND A MUTED ROLE FOR CERTAIN FUNCTIONALITY!
 
