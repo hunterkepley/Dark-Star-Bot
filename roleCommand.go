@@ -73,19 +73,24 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 		hasRole := memberHasRole(currentMember, tempRoleID)
 
 		if !hasRole { // Give that guy a role
-			err := s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role
-			if err != nil {
-				s.ChannelMessageSend(m.ChannelID, "Unable to add role! Message <@!121105861539135490> and tell him there's a problem.")
-				log.Fatal(err)
-			}
-			if err == nil { // Didnt want this popping up if there was an error
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
+			var err error
+			if roleNeeded == "Masters" || roleNeeded == "Challenger" { // useless as fuck
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Can't add %s, please talk to an Admin or Moderator to get this role!", roleNeeded))
+			} else {
+				err = s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unable to add role! Message <@!%s> and tell him there's a problem.", botOwnerID))
+					log.Fatal(err)
+				}
+				if err == nil { // Didnt want this popping up if there was an error
+					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%s role added!", roleNeeded))
+				}
 			}
 		} else { // Bye bye role
 			if !locked {
 				err := s.GuildMemberRoleRemove(currentGuild.ID, m.Author.ID, tempRoleID) // Remove the role
 				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Unable to remove role! Message <@!121105861539135490> and tell him there's a problem.")
+					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unable to remove role! Message <@!%s> and tell him there's a problem.", botOwnerID))
 					log.Fatal(err)
 				}
 				if err == nil { // Didnt want this popping up if there was an error

@@ -14,7 +14,7 @@ var (
 	roles  = Command{"roles", "Displays list of all roles available to add to yourself.", rolesCommand}
 	bug    = Command{"bug", "Sends a bug report to the creator of Dark Star Bot.", bugCommand}
 	github = Command{"github", "Displays a link to the github of the bot", githubCommand}
-	mute   = Command{"mute", "Mutes a member for X hours", muteCommand}
+	mute   = Command{"mute", "Mutes a member until `$mute`'d again. Ex. `$mute @JohnDoe#1234`", muteCommand}
 )
 
 // Command : Every command is made into a struct to make it simpler to work with and eliminate if statements

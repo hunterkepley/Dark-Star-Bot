@@ -87,10 +87,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) { // Messag
 	if len(splitMsgLowered) > 0 { // Prevented a really rare and weird bug about going out of index.
 		parseCommand(s, m, splitMsgLowered[0]) // Really shouldnt happen since `MessageCreate` is about
 	} // 										messages made on create...
-
-	if len(mutedUsers) > 0 {
-		checkMutes(s, m)
-	}
 }
 
 func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Doesn't let members who aren't mods, admins, or owners @here or @everyone. Please change to your needs.
@@ -107,13 +103,16 @@ func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Do
 			fmt.Println(err)
 			return
 		}
-		tempRoleIDM := findRoleID("Dark Mod", currentGuild) // Change these 3 to roles you want to be allowed to say @here/@everyone!
-		tempRoleIDA := findRoleID("Dark Admins", currentGuild)
-		tempRoleIDD := findRoleID("Dark Overlord", currentGuild)
-		hasRoleM := memberHasRole(currentMember, tempRoleIDM)
-		hasRoleA := memberHasRole(currentMember, tempRoleIDA)
-		hasRoleD := memberHasRole(currentMember, tempRoleIDD)
-		if !hasRoleM && !hasRoleA && !hasRoleD {
+		rolesNeeded := []string{"Dark Mod", "Dark Admins", "Dark Overlord", "Staff"}
+		canHere := false
+		for i := 0; i < len(rolesNeeded); i++ { // Checks if the muter has roles above
+			tempRoleID := findRoleID(rolesNeeded[i], currentGuild)
+			hasRoleID := memberHasRole(currentMember, tempRoleID)
+			if hasRoleID {
+				canHere = true
+			}
+		}
+		if !canHere {
 			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s>, please don't use `@here` or `@everyone`, if the message is important, talk to an admin or mod", m.Author.ID))
 			s.ChannelMessageDelete(m.ChannelID, m.ID)
 		}
