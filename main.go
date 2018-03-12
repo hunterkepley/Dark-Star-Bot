@@ -18,7 +18,7 @@ var (
 
 // Custom variables
 var (
-	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nMute"
+	helpMsg = "Prefix: `$`\nHelp\nRole\nRoles\nBug\nGithub\nMute\nMuted\nMembers"
 
 	splitMsgLowered = []string{}
 

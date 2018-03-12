@@ -1,6 +1,8 @@
 # Dark-Star-Bot
 Role management and server management discord bot made for the Dark Star Community, all in golang.
 
+This bot was made for *Dark Star Gaming* so some of it has hardcoded roles, but are easily changed to fit any server.
+
 Using the [discordgo library](https://www.github.com/bwmarrin/discordgo)
 
 Use `go get github.com/bwmarrin/discordgo` to get it!

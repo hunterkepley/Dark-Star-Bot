@@ -9,12 +9,14 @@ import (
 var (
 	commMap = make(map[string]Command)
 
-	help   = Command{"help", "Displays all commands. Also can display specific information using `$help` and a command after, for example, `$help role`.", helpCommand}
-	role   = Command{"role", "Lets you add either a lane role or a rank role to yourself. `$role jungle` for example.", roleCommand}
-	roles  = Command{"roles", "Displays list of all roles available to add to yourself.", rolesCommand}
-	bug    = Command{"bug", "Sends a bug report to the creator of Dark Star Bot.", bugCommand}
-	github = Command{"github", "Displays a link to the github of the bot", githubCommand}
-	mute   = Command{"mute", "Mutes a member until `$mute`'d again. Ex. `$mute @JohnDoe#1234`", muteCommand}
+	help    = Command{"help", "Displays all commands. Also can display specific information using `$help` and a command after, for example, `$help role`.", helpCommand}
+	role    = Command{"role", "Lets you add either a lane role or a rank role to yourself. `$role jungle` for example.", roleCommand}
+	roles   = Command{"roles", "Displays list of all roles available to add to yourself.", rolesCommand}
+	bug     = Command{"bug", "Sends a bug report to the creator of Dark Star Bot.", bugCommand}
+	github  = Command{"github", "Displays a link to the github of the bot", githubCommand}
+	mute    = Command{"mute", "Mutes a member until `$mute`'d again. Ex. `$mute @JohnDoe#1234`", muteCommand}
+	muted   = Command{"muted", "Displays all muted members [who has `Muted` role]", mutedCommand}
+	members = Command{"members", "Displays amount of members in the discord", membersCommand}
 )
 
 // Command : Every command is made into a struct to make it simpler to work with and eliminate if statements
@@ -31,6 +33,8 @@ func loadCommands() {
 	commMap[bug.name] = bug
 	commMap[github.name] = github
 	commMap[mute.name] = mute
+	commMap[muted.name] = muted
+	commMap[members.name] = members
 }
 
 func parseCommand(s *discordgo.Session, m *discordgo.MessageCreate, command string) {

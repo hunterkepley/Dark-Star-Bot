@@ -11,14 +11,12 @@ func muteCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // This nee
 	currentMember, err := getMember(s, m)
 	if err != nil {
 		fmt.Println("Unabled to grab member, ")
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 	currentGuild, err := getGuild(s, m)
 	if err != nil {
 		fmt.Println("Unabled to grab guild")
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 	rolesNeeded := []string{"Dark Mod", "Dark Admins", "Dark Overlord", "Community Leader"}
 	canMute := false
