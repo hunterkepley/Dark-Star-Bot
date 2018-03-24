@@ -13,9 +13,15 @@ func membersCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Displ
 		fmt.Println("Unable to get guild")
 		log.Fatal(err)
 	} else {
+		bots := 0
+		for i := 0; i < len(currentGuild.Members); i++ {
+			if currentGuild.Members[i].User.Bot {
+				bots++
+			}
+		}
 		s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 			Title:       fmt.Sprintf("%s", currentGuild.Name),
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{discordgo.EndpointGuildIcon(currentGuild.ID, currentGuild.Icon), "", 30, 30},
-			Description: fmt.Sprintf("There are %d members!", currentGuild.MemberCount)})
+			Description: fmt.Sprintf("There are `%d` member[s] and `%d` bot[s]", currentGuild.MemberCount-bots, bots)})
 	}
 }

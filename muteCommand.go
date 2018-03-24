@@ -18,7 +18,7 @@ func muteCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // This nee
 		fmt.Println("Unabled to grab guild")
 		log.Fatal(err)
 	}
-	rolesNeeded := []string{"Dark Mod", "Dark Admins", "Dark Overlord", "Community Leader"}
+	rolesNeeded := []string{"Dark Mod", "Dark Admins", "Dark Overlord", "Community Leader", "Staff"}
 	canMute := false
 	for i := 0; i < len(rolesNeeded); i++ { // Checks if the muter has roles above
 		tempRoleID := findRoleID(rolesNeeded[i], currentGuild)
