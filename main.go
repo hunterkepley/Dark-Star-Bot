@@ -22,7 +22,7 @@ var (
 
 	splitMsgLowered = []string{}
 
-	botOwnerID = "" // Change to your id on discord
+	botOwnerID = "121105861539135490" // Change to your id on discord
 )
 
 func makeSplitMessage(s *discordgo.Session, m *discordgo.MessageCreate) []string {
