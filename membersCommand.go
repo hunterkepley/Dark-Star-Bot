@@ -22,6 +22,6 @@ func membersCommand(s *discordgo.Session, m *discordgo.MessageCreate) { // Displ
 		s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 			Title:       fmt.Sprintf("%s", currentGuild.Name),
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{discordgo.EndpointGuildIcon(currentGuild.ID, currentGuild.Icon), "", 30, 30},
-			Description: fmt.Sprintf("There are `%d` member[s] and `%d` bot[s]", currentGuild.MemberCount-bots, bots)})
+			Description: fmt.Sprintf("There are `%d` member[s] and `%d` bot[s]", len(currentGuild.Members)-bots, bots)})
 	}
 }
