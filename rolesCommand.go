@@ -19,11 +19,7 @@ func rolesCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var ps string
 		if len(tserver.Roles) > 0 {
 			for i := 0; i < len(tserver.Roles); i++ {
-				if tserver.Roles[i].GroupID == "Lane" || tserver.Roles[i].GroupID == "Filler" ||
-					tserver.Roles[i].GroupID == "Rank" || tserver.Roles[i].GroupID == "Skill" ||
-					tserver.Roles[i].GroupID == "Style" {
-					ps += fmt.Sprintf("%s\n", tserver.Roles[i].Role)
-				}
+				ps += fmt.Sprintf("%s\n", tserver.Roles[i].Role)
 			}
 		} else {
 			ps = "No roles available!"

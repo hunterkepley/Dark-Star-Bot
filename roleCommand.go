@@ -41,7 +41,7 @@ func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, givenRole stri
 
 			case tserver.Roles[i].Calls[j]:
 				roleUsed = true
-				giveRole(s, m, tserver.Roles[i].Role, tserver.Roles[i].Locked, tserver.Roles[i].GroupID)
+				giveRole(s, m, tserver.Roles[i].Role, tserver.Roles[i].Locked)
 			}
 		}
 	}
@@ -51,7 +51,7 @@ func assignRole(s *discordgo.Session, m *discordgo.MessageCreate, givenRole stri
 	}
 }
 
-func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded string, locked bool, groupID string) { // Assigns the role based off of a role needed
+func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded string, locked bool) { // Assigns the role based off of a role needed
 
 	currentGuild, err := getGuild(s, m)
 	if err != nil {
@@ -66,7 +66,7 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 		return
 	}
 
-	if currentGuild != nil && currentMember != nil && groupID != "Vote" { // groupID != "Vote" is temporary
+	if currentGuild != nil && currentMember != nil {
 
 		tempRoleID := findRoleID(roleNeeded, currentGuild)
 
@@ -74,7 +74,7 @@ func giveRole(s *discordgo.Session, m *discordgo.MessageCreate, roleNeeded strin
 
 		if !hasRole { // Give that guy a role
 			var err error
-			if roleNeeded == "Masters" || roleNeeded == "Challenger" { // useless as fuck
+			if locked {
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Can't add %s, please talk to an Admin or Moderator to get this role!", roleNeeded))
 			} else {
 				err = s.GuildMemberRoleAdd(currentGuild.ID, m.Author.ID, tempRoleID) // Give the role

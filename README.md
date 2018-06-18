@@ -76,21 +76,29 @@ They MUST be placed in EXEDIRECTORY/roles/
 
 #### Example server.json:
 
+* Precursor notes:
+1. Calls are what users input after `$role` to get the role
+2. Role is the actual role given, has to be exact
+3. Locked is if the user can *get* the role
+
 ```
 {
     "serverID" : "123123123123123123",
     "roles" : [
         {
             "calls" : [
-                "novice"
+                "bottom",
+                "bot"
             ],
-            "role" : "Novice"
+            "role" : "Bottom",
+            "locked" : true
         },
         {
             "calls" : [
-                "intermediate"
+                "top"
             ],
-            "role" : "Intermediate"
+            "role" : "Top",
+            "locked" : false
         }
     ],
     "welcomeMessage" : {

@@ -9,10 +9,9 @@ import (
 )
 
 type dsgRole struct { // To hold calls and the role those calls affect
-	Calls   []string `json:"calls"`
-	Role    string   `json:"role"`
-	Locked  bool     `json:"locked"`
-	GroupID string   `json:"groupID"`
+	Calls  []string `json:"calls"`
+	Role   string   `json:"role"`
+	Locked bool     `json:"locked"`
 }
 
 type dsgMessage struct { // To hold a message and a channel to send when using dsgMessage.sendMessage()
