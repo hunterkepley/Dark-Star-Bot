@@ -83,10 +83,26 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) { // Messag
 	splitMsgLowered = makeSplitMessage(s, m)
 
 	checkHereEveryone(s, m)
+	checkAyy(s, m)
 
 	if len(splitMsgLowered) > 0 { // Prevented a really rare and weird bug about going out of index.
 		parseCommand(s, m, splitMsgLowered[0]) // Really shouldnt happen since `MessageCreate` is about
 	} // 										messages made on create...
+}
+
+func contains(s []string, e string) bool { // Go has no contains for slices :)
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func checkAyy(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if contains(splitMsgLowered, "ayy") {
+		s.ChannelMessageSend(m.ChannelID, "lmao")
+	}
 }
 
 func checkHereEveryone(s *discordgo.Session, m *discordgo.MessageCreate) { // Doesn't let members who aren't mods, admins, or owners @here or @everyone. Please change to your needs.
