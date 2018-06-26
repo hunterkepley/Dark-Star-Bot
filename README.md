@@ -1,4 +1,7 @@
 # Dark-Star-Bot
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Role management and server management discord bot made for the Dark Star Community, all in golang.
 
 This bot was made for *Dark Star Gaming* so some of it has hardcoded roles, but are easily changed to fit any server.
